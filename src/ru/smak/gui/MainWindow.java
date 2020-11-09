@@ -1,8 +1,10 @@
 package ru.smak.gui;
 
+import ru.smak.gui.graphics.FractalPainter;
 import ru.smak.gui.graphics.components.GraphicsPanel;
 import ru.smak.gui.graphics.coordinates.CartesianScreenPlane;
 import ru.smak.gui.graphics.coordinates.Converter;
+import ru.smak.math.Mandelbrot;
 
 import javax.swing.*;
 import java.awt.*;
@@ -44,7 +46,10 @@ public class MainWindow extends JFrame {
                 -2, 1, -1, 1
         );
 
-        //mainPanel.addPainter(fp);
+        var m = new Mandelbrot();
+        var fp = new FractalPainter(plane, m);
+
+        mainPanel.addPainter(fp);
 
         mainPanel.addComponentListener(new ComponentAdapter() {
             @Override
