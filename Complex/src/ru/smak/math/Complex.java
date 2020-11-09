@@ -7,7 +7,14 @@ import java.lang.StringBuilder;
  */
 public class Complex {
 
+    /**
+     * Вещественная часть комплексного числа
+     */
     private double re;
+
+    /**
+     * Мнимая часть комплексного числа
+     */
     private double im;
 
     /**
@@ -147,11 +154,23 @@ public class Complex {
         return new Complex(re, im);
     }
 
+    /**
+     * Сравнение двух вещественных чисел на равенство
+     * @param d1 первое вещественное число для сравнения
+     * @param d2 второе вещественное число для сравнения
+     * @return true, если числа можно считать равными и false, если числа не равны
+     */
     private static Boolean eq(double d1, double d2){
         return Math.abs(d1 - d2) <
                 Math.max(Math.ulp(d1), Math.ulp(d2)) * 2;
     }
 
+    /**
+     * Сравнение двух вещественных чисел на неравенство
+     * @param d1 первое вещественное число для сравнения
+     * @param d2 второе вещественное число для сравнения
+     * @return true, если числа не равны и false, если числа можно считать равными
+     */
     private static Boolean neq(double d1, double d2){
         return !eq(d1, d2);
     }

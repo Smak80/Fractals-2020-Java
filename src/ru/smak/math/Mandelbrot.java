@@ -22,5 +22,6 @@ public class Mandelbrot implements Fractal{
             if (z.abs2() > r2) return false;
         }
         return true;
+
     }
 }
