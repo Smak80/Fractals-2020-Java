@@ -8,9 +8,13 @@ public class SelectionPainter {
     private Point startPoint = null;
     private Point currentPoint = null;
     private Graphics g;
+    private static int cnt = 0;
 
     public SelectionPainter(Graphics g){
         this.g = g;
+        g.setXORMode(Color.WHITE);
+        g.drawRect(-2, -2, 1, 1);
+        g.setPaintMode();
     }
 
     public void setGraphics(Graphics g){
@@ -22,6 +26,8 @@ public class SelectionPainter {
             paint();
             currentPoint = null;
             startPoint = null;
+        } else {
+
         }
         isVisible = value;
     }
@@ -31,14 +37,16 @@ public class SelectionPainter {
     }
 
     public void setCurrentPoint(Point p){
-        if (currentPoint!=null)
+        if (currentPoint!=null) {
             paint();
+        }
+        cnt++;
         currentPoint = p;
         paint();
     }
 
     private void paint(){
-        if (startPoint!=null && currentPoint!=null) {
+        if (isVisible && startPoint!=null && currentPoint!=null) {
             g.setXORMode(Color.WHITE);
             // 11111111 11111111 11111111 - background
             // 11111111 11111111 11111111 - XOR Mode Color
