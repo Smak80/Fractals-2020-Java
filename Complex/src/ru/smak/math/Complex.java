@@ -52,6 +52,15 @@ public class Complex {
     }
 
     /**
+     * Метод сложения с присвоением для комплексных чисел
+     * @param other прибавляемое комплексное число
+     */
+    public void plusAssign(Complex other){
+        re += other.re;
+        im += other.im;
+    }
+
+    /**
      * Метод вычитания для комплексных чисел
      * @param other вычитаемое комплексное число
      * @return новое комплексное число, равное разности данного числа и вычитаемого
@@ -61,6 +70,15 @@ public class Complex {
                 re - other.re,
                 im - other.im
         );
+    }
+
+    /**
+     * Метод вычитания для комплексных чисел с присвоением
+     * @param other вычитаемое комплексное число
+     */
+    public void minusAssign(Complex other) {
+        re -= other.re;
+        im -= other.im;
     }
 
     /**
@@ -76,6 +94,16 @@ public class Complex {
     }
 
     /**
+     * Оператор умножения с присвоением
+     * @param other второе комплексное число для умножения
+     */
+    public void timesAssign(Complex other) {
+        var temp_re = re * other.re - im * other.im;
+        im = re * other.im + im * other.re;
+        re = temp_re;
+    }
+
+    /**
      * Оператор деления комплексных чисел
      * @param other комплексное число - делитель
      * @return частное от деления делимого числа на делитель
@@ -88,6 +116,19 @@ public class Complex {
         double i = (im * other.re - re * other.im) / zn;
 
         return new Complex(r, i);
+    }
+
+    /**
+     * Оператор деления комплексных чисел с присвоением
+     * @param other комплексное число - делитель
+     */
+    public void divAssign(Complex other){
+        //Вычисление знаменателя
+        double zn = other.re * other.re + other.im * other.im;
+
+        double r = (re * other.re + im * other.im) / zn;
+        im = (im * other.re - re * other.im) / zn;
+        re = r;
     }
 
     /**

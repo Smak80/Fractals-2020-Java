@@ -20,6 +20,7 @@ public class FractalPainter extends Painter {
 
     @Override
     public void paint(Graphics graphics) {
+        //var t1 = System.currentTimeMillis();
         for (int i = 0; i < plane.getWidth(); i++){
             for (int j = 0; j < plane.getHeight(); j++){
                 var x = Converter.xScr2Crt(i, plane);
@@ -30,5 +31,6 @@ public class FractalPainter extends Painter {
                 graphics.fillRect(i, j, 1, 1);
             }
         }
+        //var t2 = System.currentTimeMillis();
     }
 }
