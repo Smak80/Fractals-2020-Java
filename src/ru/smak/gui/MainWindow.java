@@ -3,7 +3,7 @@ package ru.smak.gui;
 import ru.smak.gui.graphics.FractalPainter;
 import ru.smak.gui.graphics.components.GraphicsPanel;
 import ru.smak.gui.graphics.coordinates.CartesianScreenPlane;
-import ru.smak.gui.graphics.coordinates.Converter;
+import ru.smak.gui.graphics.fractalcolors.ColorScheme1;
 import ru.smak.math.Mandelbrot;
 
 import javax.swing.*;
@@ -19,7 +19,7 @@ public class MainWindow extends JFrame {
     public MainWindow(){
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setMinimumSize(MIN_FRAME_SIZE);
-        setTitle("Полиномы");
+        setTitle("Фракталы");
 
         mainPanel = new GraphicsPanel();
 
@@ -47,8 +47,9 @@ public class MainWindow extends JFrame {
         );
 
         var m = new Mandelbrot();
+        var c = new ColorScheme1();
         var fp = new FractalPainter(plane, m);
-
+        fp.col = c;
         mainPanel.addPainter(fp);
 
         mainPanel.addComponentListener(new ComponentAdapter() {

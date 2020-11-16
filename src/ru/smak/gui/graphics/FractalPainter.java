@@ -2,6 +2,7 @@ package ru.smak.gui.graphics;
 
 import ru.smak.gui.graphics.coordinates.CartesianScreenPlane;
 import ru.smak.gui.graphics.coordinates.Converter;
+import ru.smak.gui.graphics.fractalcolors.Colorizer;
 import ru.smak.math.Complex;
 import ru.smak.math.Fractal;
 
@@ -11,6 +12,8 @@ public class FractalPainter extends Painter {
 
     private final CartesianScreenPlane plane;
     private final Fractal fractal;
+
+    public Colorizer col;
 
     public FractalPainter(CartesianScreenPlane plane,
                           Fractal f){
@@ -26,7 +29,7 @@ public class FractalPainter extends Painter {
                 var x = Converter.xScr2Crt(i, plane);
                 var y = Converter.yScr2Crt(j, plane);
                 var is = fractal.isInSet(new Complex(x, y));
-                Color c = (is)?Color.BLACK:Color.WHITE;
+                Color c = (col!=null)?col.getColor(is):((is==1.0F)?Color.BLACK:Color.WHITE);
                 graphics.setColor(c);
                 graphics.fillRect(i, j, 1, 1);
             }
