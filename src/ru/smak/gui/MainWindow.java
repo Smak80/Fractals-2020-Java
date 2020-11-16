@@ -1,6 +1,7 @@
 package ru.smak.gui;
 
 import ru.smak.gui.graphics.FractalPainter;
+import ru.smak.gui.graphics.SelectionPainter;
 import ru.smak.gui.graphics.components.GraphicsPanel;
 import ru.smak.gui.graphics.coordinates.CartesianScreenPlane;
 import ru.smak.gui.graphics.fractalcolors.ColorScheme1;
@@ -51,18 +52,36 @@ public class MainWindow extends JFrame {
         var fp = new FractalPainter(plane, m);
         fp.col = c;
         mainPanel.addPainter(fp);
+        var sp = new SelectionPainter(mainPanel.getGraphics());
 
         mainPanel.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
                 plane.setWidth(mainPanel.getWidth());
                 plane.setHeight(mainPanel.getHeight());
+                sp.setGraphics(mainPanel.getGraphics());
             }
         });
         mainPanel.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) {
-                //mainPanel.repaint();
+            public void mousePressed(MouseEvent e) {
+                super.mousePressed(e);
+                sp.setVisible(true);
+                sp.setStartPoint(e.getPoint());
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                super.mouseReleased(e);
+                sp.setVisible(false);
+            }
+        });
+
+        mainPanel.addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                super.mouseDragged(e);
+                sp.setCurrentPoint(e.getPoint());
             }
         });
     }
