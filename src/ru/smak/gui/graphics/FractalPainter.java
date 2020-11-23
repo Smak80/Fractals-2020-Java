@@ -10,10 +10,16 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-public class FractalPainter extends Painter {
+public class FractalPainter extends Painter{
 
     private final CartesianScreenPlane plane;
     private final Fractal fractal;
+    private boolean recreate = true;
+    private BufferedImage sbi = null;
+    private BufferedImage bi = null;
+    private int done = 0;
+
+    private ArrayList<FinishedListener> fin = new ArrayList<>();
 
     public Colorizer col;
 
@@ -24,24 +30,54 @@ public class FractalPainter extends Painter {
     }
 
     ArrayList<Thread> ts = new ArrayList<>();
+    ArrayList<FractalStripPainter> fsp = new ArrayList<>();
 
+    public void addFinishedListener(FinishedListener f){
+        fin.add(f);
+    }
+
+    public void removeFinishedListener(FinishedListener f){
+        fin.remove(f);
+    }
     @Override
     public void paint(Graphics graphics) {
-        //var t1 = System.currentTimeMillis();
-        var stripCount = Runtime.getRuntime().availableProcessors();
-        ts.clear();
-        for (int i = 0; i<stripCount; i++){
-            var fsp = new FractalStripPainter(graphics, i, stripCount);
-            ts.add(new Thread(fsp));
-            ts.get(i).start();
+        if (sbi != null){
+            graphics.drawImage(sbi, 0, 0, plane.getWidth(), plane.getHeight(), null);
+            if (!recreate) {
+                recreate = true;
+                return;
+            }
         }
+        bi = new BufferedImage(plane.getWidth(), plane.getHeight(), BufferedImage.TYPE_INT_RGB);
+        var g = bi.getGraphics();
+        done = 0;
+        var stripCount = Runtime.getRuntime().availableProcessors();
+        for (var sp : fsp){
+            sp.stop();
+        }
+        fsp.clear();
         for (var t : ts){
             try {
                 t.join();
             } catch (InterruptedException e) {
             }
         }
-        //var t2 = System.currentTimeMillis();
+        ts.clear();
+        for (int i = 0; i<stripCount; i++){
+            fsp.add(new FractalStripPainter(g, i, stripCount));
+            ts.add(new Thread(fsp.get(i)));
+            ts.get(i).start();
+        }
+    }
+
+    private void finished(){
+        sbi = new BufferedImage(plane.getWidth(), plane.getHeight(), BufferedImage.TYPE_INT_RGB);
+        var sg = sbi.getGraphics();
+        sg.drawImage(bi, 0, 0, null);
+        recreate = false;
+        for (var f : fin) {
+            f.finished();
+        }
     }
 
     class FractalStripPainter implements Runnable{
@@ -50,6 +86,8 @@ public class FractalPainter extends Painter {
         private int endPx;
         private final Graphics graphics;
         private BufferedImage bi;
+        private boolean stop = false;
+        private int stripCount;
 
         public FractalStripPainter(
                 Graphics g,
@@ -57,6 +95,7 @@ public class FractalPainter extends Painter {
                 int stripCount
         ){
             graphics = g;
+            this.stripCount = stripCount;
             var width = plane.getWidth() / stripCount;
             begPx = stripId * width;
             if (stripId == stripCount - 1)
@@ -70,6 +109,7 @@ public class FractalPainter extends Painter {
             var g = bi.getGraphics();
             for (int i = begPx; i < endPx; i++){
                 for (int j = 0; j < plane.getHeight(); j++){
+                    if (stop) return;
                     var x = Converter.xScr2Crt(i, plane);
                     var y = Converter.yScr2Crt(j, plane);
                     var is = fractal.isInSet(new Complex(x, y));
@@ -81,6 +121,13 @@ public class FractalPainter extends Painter {
             synchronized (graphics) {
                 graphics.drawImage(bi, begPx, 0, null);
             }
+            done++;
+            if (done == stripCount)
+                finished();
+        }
+
+        public void stop() {
+            stop = true;
         }
     }
 }

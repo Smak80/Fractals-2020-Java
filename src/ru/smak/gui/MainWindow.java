@@ -1,5 +1,6 @@
 package ru.smak.gui;
 
+import ru.smak.gui.graphics.FinishedListener;
 import ru.smak.gui.graphics.FractalPainter;
 import ru.smak.gui.graphics.SelectionPainter;
 import ru.smak.gui.graphics.components.GraphicsPanel;
@@ -52,6 +53,12 @@ public class MainWindow extends JFrame {
         var c = new ColorScheme1();
         var fp = new FractalPainter(plane, m);
         fp.col = c;
+        fp.addFinishedListener(new FinishedListener() {
+            @Override
+            public void finished() {
+                mainPanel.repaint();
+            }
+        });
         mainPanel.addPainter(fp);
         var sp = new SelectionPainter(mainPanel.getGraphics());
 
