@@ -4,6 +4,7 @@ import ru.smak.gui.graphics.FractalPainter;
 import ru.smak.gui.graphics.SelectionPainter;
 import ru.smak.gui.graphics.components.GraphicsPanel;
 import ru.smak.gui.graphics.coordinates.CartesianScreenPlane;
+import ru.smak.gui.graphics.coordinates.Converter;
 import ru.smak.gui.graphics.fractalcolors.ColorScheme1;
 import ru.smak.math.Mandelbrot;
 
@@ -74,6 +75,16 @@ public class MainWindow extends JFrame {
             public void mouseReleased(MouseEvent e) {
                 super.mouseReleased(e);
                 sp.setVisible(false);
+                var r = sp.getSelectionRect();
+                var xMin = Converter.xScr2Crt(r.x, plane);
+                var xMax = Converter.xScr2Crt(r.x+r.width, plane);
+                var yMin  = Converter.yScr2Crt(r.y+r.height, plane);
+                var yMax = Converter.yScr2Crt(r.y, plane);
+                plane.xMin = xMin;
+                plane.xMax = xMax;
+                plane.yMin = yMin;
+                plane.yMax = yMax;
+                mainPanel.repaint();
             }
         });
 
