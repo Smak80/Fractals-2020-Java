@@ -49,9 +49,6 @@ public class FractalPainter extends Painter{
                 return;
             }
         }
-        bi = new BufferedImage(plane.getWidth(), plane.getHeight(), BufferedImage.TYPE_INT_RGB);
-        var g = bi.getGraphics();
-        done = 0;
         for (var sp : fsp){
             sp.stop();
         }
@@ -63,6 +60,9 @@ public class FractalPainter extends Painter{
             }
         }
         ts.clear();
+        bi = new BufferedImage(plane.getWidth(), plane.getHeight(), BufferedImage.TYPE_INT_RGB);
+        var g = bi.getGraphics();
+        done = 0;
         for (int i = 0; i<stripCount; i++){
             fsp.add(new FractalStripPainter(g, i));
             ts.add(new Thread(fsp.get(i)));
@@ -110,7 +110,7 @@ public class FractalPainter extends Painter{
                     var x = Converter.xScr2Crt(i, plane);
                     var y = Converter.yScr2Crt(j, plane);
                     var is = fractal.isInSet(new Complex(x, y));
-                    Color c = (col!=null)?col.getColor(is):((is==1.0F)?Color.BLACK:Color.WHITE);
+                    Color c = (col!=null)?col.getColor((float)is):((is==1.0F)?Color.BLACK:Color.WHITE);
                     g.setColor(c);
                     g.fillRect(i-begPx, j, 1, 1);
                 }

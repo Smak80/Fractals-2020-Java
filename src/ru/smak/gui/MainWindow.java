@@ -7,6 +7,7 @@ import ru.smak.gui.graphics.components.GraphicsPanel;
 import ru.smak.gui.graphics.coordinates.CartesianScreenPlane;
 import ru.smak.gui.graphics.coordinates.Converter;
 import ru.smak.gui.graphics.fractalcolors.ColorScheme1;
+import ru.smak.gui.graphics.fractalcolors.ColorScheme2;
 import ru.smak.math.Mandelbrot;
 
 import javax.swing.*;
@@ -50,7 +51,7 @@ public class MainWindow extends JFrame {
         );
 
         var m = new Mandelbrot();
-        var c = new ColorScheme1();
+        var c = new ColorScheme2();
         var fp = new FractalPainter(plane, m);
         fp.col = c;
         fp.addFinishedListener(new FinishedListener() {
