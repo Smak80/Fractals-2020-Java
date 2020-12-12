@@ -64,11 +64,50 @@ public class MainWindow extends JFrame {
         var sp = new SelectionPainter(mainPanel.getGraphics());
 
         mainPanel.addComponentListener(new ComponentAdapter() {
+            int wM = mainPanel.getWidth();
+            int hM = mainPanel.getHeight();
+            double XmaxPlane = plane.xMax;
+            double XminPlane = plane.xMin;
+            double YmaxPlane = plane.yMax;
+            double YminPlane = plane.yMin;
             @Override
             public void componentResized(ComponentEvent e) {
+                var kW = (float)mainPanel.getWidth()/(float)wM;
+                var kH = (float)mainPanel.getHeight()/(float)hM;
+                var ration0 = (float)mainPanel.getWidth()/(float)mainPanel.getHeight();
+                var ration = kW/kH;
+                if(kW<1 || kH<1){
+                    if (ration0>=1){
+                        if (kW<1){
+                            plane.xMin = XminPlane - (1-kW)*(XmaxPlane-XminPlane)/2;
+                            plane.xMax = XmaxPlane + (1-kW)*(XmaxPlane-XminPlane)/2;
+                        }
+                        else{
+                            plane.yMin = YminPlane - (1-kH)*(YmaxPlane-YminPlane)/2;
+                            plane.yMax = YmaxPlane + (1-kH)*(YmaxPlane-YminPlane)/2;
+                        }
+                        if(kH<1){
+
+                        }
+                        else{
+
+                        }
+                    }
+                    else{
+
+                    }
+                }
+                else{
+                    plane.xMin = XminPlane - (kW-1)*(XmaxPlane-XminPlane)/2;
+                    plane.xMax = XmaxPlane + (kW-1)*(XmaxPlane-XminPlane)/2;
+                    plane.yMin = YminPlane - (kH-1)*(YmaxPlane-YminPlane)/2;
+                    plane.yMax = YmaxPlane + (kH-1)*(YmaxPlane-YminPlane)/2;
+                }
                 plane.setWidth(mainPanel.getWidth());
                 plane.setHeight(mainPanel.getHeight());
                 sp.setGraphics(mainPanel.getGraphics());
+                mainPanel.repaint();
+
             }
         });
         mainPanel.addMouseListener(new MouseAdapter() {
@@ -84,14 +123,30 @@ public class MainWindow extends JFrame {
                 super.mouseReleased(e);
                 sp.setVisible(false);
                 var r = sp.getSelectionRect();
-                var xMin = Converter.xScr2Crt(r.x, plane);
-                var xMax = Converter.xScr2Crt(r.x+r.width, plane);
-                var yMin  = Converter.yScr2Crt(r.y+r.height, plane);
-                var yMax = Converter.yScr2Crt(r.y, plane);
-                plane.xMin = xMin;
-                plane.xMax = xMax;
-                plane.yMin = yMin;
-                plane.yMax = yMax;
+                var xMin = Converter.xScr2Crt(r.x,plane);
+                var xMax = Converter.xScr2Crt(r.x+r.width,plane);
+
+                var yMin = Converter.yScr2Crt(r.y+r.height,plane);
+                var yMax = Converter.yScr2Crt(r.y,plane);
+
+                var pWidh =  xMax - xMin;
+                var pHaight = yMax - yMin;
+                var pRatio = (float)plane.getHeight()/(float)plane.getWidth();
+                if (pWidh*pRatio>pHaight){
+                    var pNewHaight = pWidh*pRatio;
+                    plane.xMin = xMin;
+                    plane.yMin = yMin-Math.abs((pNewHaight-pHaight)/2);
+                    plane.xMax = xMin+pWidh;
+                    plane.yMax = yMin+pNewHaight-Math.abs((pNewHaight-pHaight)/2);
+                }
+                else{
+                    var pNewWidh = pHaight/pRatio;
+                    plane.xMin = xMin - Math.abs((pNewWidh-pWidh)/2);
+                    plane.yMin = yMin;
+                    plane.xMax = xMin+pNewWidh-Math.abs((pNewWidh-pWidh)/2);
+                    plane.yMax = yMin+pHaight;
+                }
+
                 mainPanel.repaint();
             }
         });
