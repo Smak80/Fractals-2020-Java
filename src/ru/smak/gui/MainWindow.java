@@ -78,23 +78,48 @@ public class MainWindow extends JFrame {
                 var ration = kW/kH;
                 if(kW<1 || kH<1){
                     if (ration0>=1){
-                        if (kW<1){
+                        /*if (kW<1){
                             plane.xMin = XminPlane - (1-kW)*(XmaxPlane-XminPlane)/2;
                             plane.xMax = XmaxPlane + (1-kW)*(XmaxPlane-XminPlane)/2;
                         }
                         else{
-                            plane.yMin = YminPlane - (1-kH)*(YmaxPlane-YminPlane)/2;
-                            plane.yMax = YmaxPlane + (1-kH)*(YmaxPlane-YminPlane)/2;
+                            plane.xMin = XminPlane - (ration-1)*(XmaxPlane-XminPlane)/2;
+                            plane.xMax = XmaxPlane + (ration-1)*(XmaxPlane-XminPlane)/2;
                         }
                         if(kH<1){
-
+                            plane.yMin = YminPlane -(1-ration)*(YmaxPlane-YminPlane)/2;
+                            plane.yMax = YmaxPlane + (1-ration)*(YmaxPlane-YminPlane)/2;
                         }
                         else{
-
-                        }
+                            plane.yMin = YminPlane - (1-ration)*(YmaxPlane-YminPlane)/2;
+                            plane.yMax = YmaxPlane + (1-ration)*(YmaxPlane-YminPlane)/2;
+                        }*/
+                        plane.yMin = YminPlane;
+                        plane.yMax = YmaxPlane;
+                        plane.xMin = XminPlane - Math.abs((1-ration)*(XmaxPlane-XminPlane)/2);
+                        plane.xMax = XmaxPlane + Math.abs((1-ration)*(XmaxPlane-XminPlane)/2);
                     }
                     else{
-
+                        /*if (kW<1){
+                            plane.xMin = XminPlane;
+                            plane.xMax = XmaxPlane;
+                        }
+                        else{
+                            plane.xMin = XminPlane - (ration-1)*(XmaxPlane-XminPlane)/2;
+                            plane.xMax = XmaxPlane + (ration-1)*(XmaxPlane-XminPlane)/2;
+                        }
+                        if(kH<1){
+                            plane.yMin = YminPlane ;
+                            plane.yMax = YmaxPlane ;
+                        }
+                        else{
+                            plane.yMin = YminPlane - (1-ration)*(YmaxPlane-YminPlane)/2;
+                            plane.yMax = YmaxPlane + (1-ration)*(YmaxPlane-YminPlane)/2;
+                        }*/
+                        plane.xMin = XminPlane;
+                        plane.xMax = XmaxPlane;
+                        plane.yMax = YmaxPlane + Math.abs((1/ration-1)*(YmaxPlane-YminPlane)/2);
+                        plane.yMin = YminPlane - Math.abs((1/ration-1)*(YmaxPlane-YminPlane)/2);
                     }
                 }
                 else{
