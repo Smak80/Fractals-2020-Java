@@ -20,6 +20,13 @@ public class MainWindow extends JFrame {
     static final Dimension MIN_SIZE = new Dimension(450, 350);
     static final Dimension MIN_FRAME_SIZE = new Dimension(600, 500);
 
+    int wM = 0;
+    int hM = 0;
+    double XmaxPlane = 0;
+    double XminPlane = 0;
+    double YmaxPlane = 0;
+    double YminPlane = 0;
+
     public MainWindow(){
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setMinimumSize(MIN_FRAME_SIZE);
@@ -62,64 +69,61 @@ public class MainWindow extends JFrame {
         });
         mainPanel.addPainter(fp);
         var sp = new SelectionPainter(mainPanel.getGraphics());
+        wM = mainPanel.getWidth();
+        hM = mainPanel.getHeight();
+        XmaxPlane = plane.xMax;
+        XminPlane = plane.xMin;
+        YmaxPlane = plane.yMax;
+        YminPlane = plane.yMin;
 
         mainPanel.addComponentListener(new ComponentAdapter() {
-            int wM = mainPanel.getWidth();
-            int hM = mainPanel.getHeight();
-            double XmaxPlane = plane.xMax;
-            double XminPlane = plane.xMin;
-            double YmaxPlane = plane.yMax;
-            double YminPlane = plane.yMin;
+
             @Override
             public void componentResized(ComponentEvent e) {
                 var kW = (float)mainPanel.getWidth()/(float)wM;
                 var kH = (float)mainPanel.getHeight()/(float)hM;
                 var ration0 = (float)mainPanel.getWidth()/(float)mainPanel.getHeight();
                 var ration = kW/kH;
+
                 if(kW<1 || kH<1){
-                    if (ration0>=1){
-                        /*if (kW<1){
-                            plane.xMin = XminPlane - (1-kW)*(XmaxPlane-XminPlane)/2;
-                            plane.xMax = XmaxPlane + (1-kW)*(XmaxPlane-XminPlane)/2;
-                        }
-                        else{
-                            plane.xMin = XminPlane - (ration-1)*(XmaxPlane-XminPlane)/2;
-                            plane.xMax = XmaxPlane + (ration-1)*(XmaxPlane-XminPlane)/2;
-                        }
-                        if(kH<1){
-                            plane.yMin = YminPlane -(1-ration)*(YmaxPlane-YminPlane)/2;
-                            plane.yMax = YmaxPlane + (1-ration)*(YmaxPlane-YminPlane)/2;
-                        }
-                        else{
-                            plane.yMin = YminPlane - (1-ration)*(YmaxPlane-YminPlane)/2;
-                            plane.yMax = YmaxPlane + (1-ration)*(YmaxPlane-YminPlane)/2;
-                        }*/
+                    /*if (ration0>=1){
                         plane.yMin = YminPlane;
                         plane.yMax = YmaxPlane;
                         plane.xMin = XminPlane - Math.abs((1-ration)*(XmaxPlane-XminPlane)/2);
                         plane.xMax = XmaxPlane + Math.abs((1-ration)*(XmaxPlane-XminPlane)/2);
-                    }
-                    else{
-                        /*if (kW<1){
+                        if (ration0<=1.2){
+                            plane.yMin = -3*(1/ration0)/2;
+                            plane.yMax = +3*(1/ration0)/2;
                             plane.xMin = XminPlane;
                             plane.xMax = XmaxPlane;
                         }
-                        else{
-                            plane.xMin = XminPlane - (ration-1)*(XmaxPlane-XminPlane)/2;
-                            plane.xMax = XmaxPlane + (ration-1)*(XmaxPlane-XminPlane)/2;
-                        }
-                        if(kH<1){
-                            plane.yMin = YminPlane ;
-                            plane.yMax = YmaxPlane ;
-                        }
-                        else{
-                            plane.yMin = YminPlane - (1-ration)*(YmaxPlane-YminPlane)/2;
-                            plane.yMax = YmaxPlane + (1-ration)*(YmaxPlane-YminPlane)/2;
-                        }*/
+                    }
+                    else{
                         plane.xMin = XminPlane;
                         plane.xMax = XmaxPlane;
                         plane.yMax = YmaxPlane + Math.abs((1/ration-1)*(YmaxPlane-YminPlane)/2);
                         plane.yMin = YminPlane - Math.abs((1/ration-1)*(YmaxPlane-YminPlane)/2);
+                        if (1/ration0<=1.2){
+                            plane.yMin = -3*(1/ration0)/2;
+                            plane.yMax = +3*(1/ration0)/2;
+                            plane.xMin = XminPlane;
+                            plane.xMax = XmaxPlane;
+                        }
+                    }*/
+                    if (ration0<=1.5)
+                    {
+                        var ymin = plane.yMin;
+                        plane.yMin = (plane.yMax+plane.yMin)/2-(plane.xMax-plane.xMin)*(1/ration0)/2;
+                        plane.yMax = (plane.yMax+ymin)/2+(plane.xMax-plane.xMin)*(1/ration0)/2;
+                        plane.xMin = XminPlane;
+                        plane.xMax = XmaxPlane;
+                    }
+                    else{
+                        plane.yMin = YminPlane;
+                        plane.yMax = YmaxPlane;
+                        var xmin = plane.xMin;
+                        plane.xMin = (plane.xMax + plane.xMin)/2 - (plane.yMax-plane.yMin)*(ration0)/2;
+                        plane.xMax = (plane.xMax + xmin)/2 + (plane.yMax-plane.yMin)*(ration0)/2;
                     }
                 }
                 else{
@@ -171,6 +175,12 @@ public class MainWindow extends JFrame {
                     plane.xMax = xMin+pNewWidh-Math.abs((pNewWidh-pWidh)/2);
                     plane.yMax = yMin+pHaight;
                 }
+                wM = mainPanel.getWidth();
+                hM = mainPanel.getHeight();
+                XmaxPlane = plane.xMax;
+                XminPlane = plane.xMin;
+                YmaxPlane = plane.yMax;
+                YminPlane = plane.yMin;
 
                 mainPanel.repaint();
             }
