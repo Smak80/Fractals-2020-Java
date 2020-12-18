@@ -12,7 +12,14 @@ public class DynamicIters {
             this.yMax = yMax;
             firstRect = false;
         }else{
-            Iters = (int)(Math.min(10000,(this.xMax)));
+            Iters = (int)(Math.min(10000,Iters*(Math.abs(this.xMax-this.xMin)/Math.abs(xMax-xMin))*(Math.abs(this.yMax-this.yMin)/Math.abs(yMax-yMin))));
+            this.xMin = xMin;
+            this.xMax = xMax;
+            this.yMin = yMin;
+            this.yMax = yMax;
         }
+    }
+    public int getIters(){
+        return Iters;
     }
 }

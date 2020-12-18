@@ -8,6 +8,7 @@ import ru.smak.gui.graphics.coordinates.CartesianScreenPlane;
 import ru.smak.gui.graphics.coordinates.Converter;
 import ru.smak.gui.graphics.fractalcolors.ColorScheme1;
 import ru.smak.gui.graphics.fractalcolors.ColorScheme2;
+import ru.smak.math.DynamicIters;
 import ru.smak.math.Mandelbrot;
 
 import javax.swing.*;
@@ -51,6 +52,7 @@ public class MainWindow extends JFrame {
         );
 
         var m = new Mandelbrot();
+        m.d = new DynamicIters();
         var c = new ColorScheme2();
         var fp = new FractalPainter(plane, m);
         fp.col = c;
@@ -92,6 +94,7 @@ public class MainWindow extends JFrame {
                 plane.xMax = xMax;
                 plane.yMin = yMin;
                 plane.yMax = yMax;
+                m.d.setAll(xMin,xMax,yMin,yMax);
                 mainPanel.repaint();
             }
         });
