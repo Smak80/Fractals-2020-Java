@@ -53,6 +53,7 @@ public class MainWindow extends JFrame {
 
         var m = new Mandelbrot();
         m.d = new DynamicIters();
+        m.d.setAll(plane.xMin,plane.xMax,plane.yMin,plane.yMax);
         var c = new ColorScheme2();
         var fp = new FractalPainter(plane, m);
         fp.col = c;
