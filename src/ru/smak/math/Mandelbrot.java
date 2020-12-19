@@ -1,21 +1,22 @@
 package ru.smak.math;
 
+import ru.smak.gui.graphics.coordinates.CartesianScreenPlane;
+
 public class Mandelbrot implements Fractal{
 
     private int maxIters = 200;
+    private int dynamicIters = 200;
     private double r2 = 4;
-    private DynamicIters d;
+    private static DynamicIters d = new DynamicIters();
     private boolean dynDetalization = true;
-    public Mandelbrot(){
-        d = new DynamicIters();
-    }
+
 
     public void setDynDetalization(boolean b){
         dynDetalization = b;
     }
-    public void setBordersForDetalization(double xMin,double xMax,double yMin, double yMax){
-        if(dynDetalization | d.getFirstRect()){
-            d.setAll(xMin,xMax,yMin,yMax);
+    public void findDynIters(CartesianScreenPlane p){
+        if(dynDetalization ){
+            dynamicIters = d.getIters(p);
         }
     }
     public void setMaxIters(int value){
@@ -31,11 +32,11 @@ public class Mandelbrot implements Fractal{
     public double isInSet(Complex c) {
         final var z = new Complex();
         if(dynDetalization) {
-            for (int i = 0; i < this.d.getIters(); i++) {
+            for (int i = 0; i < dynamicIters; i++) {
                 z.timesAssign(z);
                 z.plusAssign(c);
                 if (z.abs2() > r2)
-                    return i - Math.log(Math.log(z.abs()) / Math.log(this.d.getIters())) / Math.log(2.0);
+                    return i - Math.log(Math.log(z.abs()) / Math.log(dynamicIters)) / Math.log(2.0);
             }
             return 1.0F;
         }else{
