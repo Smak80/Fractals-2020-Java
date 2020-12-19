@@ -52,8 +52,8 @@ public class MainWindow extends JFrame {
         );
 
         var m = new Mandelbrot();
-        m.d = new DynamicIters();
-        m.d.setAll(plane.xMin,plane.xMax,plane.yMin,plane.yMax);
+
+        m.setBordersForDetalization(plane.xMin,plane.xMax,plane.yMin,plane.yMax);
         var c = new ColorScheme2();
         var fp = new FractalPainter(plane, m);
         fp.col = c;
@@ -95,7 +95,7 @@ public class MainWindow extends JFrame {
                 plane.xMax = xMax;
                 plane.yMin = yMin;
                 plane.yMax = yMax;
-                m.d.setAll(xMin,xMax,yMin,yMax);
+                m.setBordersForDetalization(xMin,xMax,yMin,yMax);
                 mainPanel.repaint();
             }
         });

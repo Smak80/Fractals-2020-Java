@@ -22,4 +22,7 @@ public class DynamicIters {
     public int getIters(){
         return Iters;
     }
+    public boolean getFirstRect(){
+        return firstRect;
+    }
 }
