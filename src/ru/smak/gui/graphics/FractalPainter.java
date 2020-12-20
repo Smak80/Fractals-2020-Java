@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class FractalPainter extends Painter{
 
     private final CartesianScreenPlane plane;
-    private final Fractal fractal;
+    private Fractal fractal;
     private boolean recreate = true;
     private BufferedImage sbi = null;
     private BufferedImage bi = null;
@@ -40,6 +40,11 @@ public class FractalPainter extends Painter{
     public void removeFinishedListener(FinishedListener f){
         fin.remove(f);
     }
+
+    public void setFractal(Fractal fractal){
+        this.fractal = fractal;
+    }
+
     @Override
     public void paint(Graphics graphics) {
         if (sbi != null){
@@ -49,6 +54,10 @@ public class FractalPainter extends Painter{
                 return;
             }
         }
+        create();
+    }
+
+    public void create(){
         for (var sp : fsp){
             sp.stop();
         }
@@ -68,6 +77,17 @@ public class FractalPainter extends Painter{
             ts.add(new Thread(fsp.get(i)));
             ts.get(i).start();
         }
+    }
+
+    public BufferedImage getSavedImage(){
+        create();
+        for (var t : ts){
+            try {
+                t.join();
+            } catch (InterruptedException e) {
+            }
+        }
+        return sbi;
     }
 
     private void finished(){
