@@ -5,7 +5,7 @@ import ru.smak.gui.graphics.coordinates.CartesianScreenPlane;
 public class Mandelbrot implements Fractal{
 
     private int maxIters = 200;
-    private int dynamicIters = 200;
+    private int dynamicIters = 100;
     private double r2 = 4;
     private static DynamicIters d = new DynamicIters();
     private boolean dynDetalization = true;
