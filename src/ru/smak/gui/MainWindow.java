@@ -6,7 +6,6 @@ import ru.smak.gui.graphics.SelectionPainter;
 import ru.smak.gui.graphics.components.GraphicsPanel;
 import ru.smak.gui.graphics.coordinates.CartesianScreenPlane;
 import ru.smak.gui.graphics.coordinates.Converter;
-import ru.smak.gui.graphics.fractalcolors.ColorScheme1;
 import ru.smak.gui.graphics.fractalcolors.ColorScheme2;
 import ru.smak.math.Mandelbrot;
 
@@ -19,7 +18,8 @@ public class MainWindow extends JFrame {
 
     static final Dimension MIN_SIZE = new Dimension(450, 350);
     static final Dimension MIN_FRAME_SIZE = new Dimension(600, 500);
-
+    Mandelbrot mandelbrot = new Mandelbrot();
+    FractalPainter fp;
     public MainWindow(){
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setMinimumSize(MIN_FRAME_SIZE);
@@ -49,10 +49,11 @@ public class MainWindow extends JFrame {
                 mainPanel.getHeight(),
                 -2, 1, -1, 1
         );
+        mandelbrot.setPlane(plane);
 
-        var m = new Mandelbrot();
+        fp = new FractalPainter(plane, mandelbrot);
+        mandelbrot.setStockParams(plane.xMin,plane.xMax,plane.yMin,plane.yMax);
         var c = new ColorScheme2();
-        var fp = new FractalPainter(plane, m);
         fp.col = c;
         fp.addFinishedListener(new FinishedListener() {
             @Override
