@@ -8,6 +8,7 @@ public class Mandelbrot implements Fractal{
     private int maxIters = 200;
     private double r2 = 4;
     private boolean isDynamic = true;
+    private int index = 0;
     private CartesianScreenPlane plane;
     private double stockXMin,stockXMax,stockYMin,stockYMax;
     public void setStockParams(double xMin,double xMax,double yMin,double yMmax){
@@ -16,6 +17,11 @@ public class Mandelbrot implements Fractal{
         stockYMin = yMin;
         stockYMax = yMmax;
     }
+
+    public void setIndex(int index){
+        this.index = index;
+    }
+
     public void setMaxIters(int value){
         maxIters = Math.max(5, value);
     }
@@ -35,10 +41,29 @@ public class Mandelbrot implements Fractal{
     @Override
     public double isInSet(Complex c) {
         final var z = new Complex();
+        var t = new Complex();
         var d= (isDynamic) ? DynamicIterations.getIters(plane,stockXMin,stockXMax,stockYMin,stockYMax) : maxIters;
             for (int i = 0; i < d; i++) {
-                z.timesAssign(z);
-                z.plusAssign(c);
+                if(index == 0){
+                    z.timesAssign(z);
+                    z.plusAssign(c);
+                }
+                else if(index == 1){
+                    t = z.times(z);//t=z^2, z=z
+                    z.timesAssign(t);//z=z*z^2 = z^3
+                    z.plusAssign(c);
+                }
+                else if(index == 2){
+                    z.timesAssign(z);
+                    z.timesAssign(z);
+                    z.plusAssign(c);
+                }
+                else{
+                    t = z.times(z);//t=z^2, z=z
+                    z.timesAssign(t);//z=z*z^2 = z^3
+                    z.timesAssign(z);
+                    z.plusAssign(c);
+                }
                 if (z.abs2() > r2)
                     return i - Math.log(Math.log(z.abs()) / Math.log(d)) / Math.log(2.0);
             }

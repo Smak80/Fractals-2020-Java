@@ -1,4 +1,4 @@
-package ru.smak.gui.menu;
+package ru.smak.gui.graphics.menu;
 
 import ru.smak.gui.graphics.FractalPainter;
 import ru.smak.gui.graphics.coordinates.CartesianScreenPlane;
