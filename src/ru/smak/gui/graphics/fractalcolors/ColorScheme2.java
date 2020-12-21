@@ -1,8 +1,10 @@
 package ru.smak.gui.graphics.fractalcolors;
 
+import ru.smak.gui.graphics.fractalcolors.Colorizer;
+
 import java.awt.*;
 
-public class ColorScheme2 implements Colorizer{
+public class ColorScheme2 implements Colorizer {
 
     @Override
     public Color getColor(float x) {

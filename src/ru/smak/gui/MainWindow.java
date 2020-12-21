@@ -6,9 +6,12 @@ import ru.smak.gui.graphics.SelectionPainter;
 import ru.smak.gui.graphics.components.GraphicsPanel;
 import ru.smak.gui.graphics.coordinates.CartesianScreenPlane;
 import ru.smak.gui.graphics.coordinates.Converter;
-import ru.smak.gui.graphics.fractalcolors.ColorScheme1;
-import ru.smak.gui.graphics.fractalcolors.ColorScheme2;
-import ru.smak.math.Mandelbrot;
+import ru.smak.gui.graphics.fractalcolors.*;
+import ru.smak.gui.graphics.menu.ColorChooseListener;
+import ru.smak.gui.graphics.menu.MainMenu;
+import ru.smak.gui.graphics.menu.MandelbrotChooseListener;
+import ru.smak.gui.graphics.menu.ToolBar;
+import ru.smak.math.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,6 +22,21 @@ public class MainWindow extends JFrame {
 
     static final Dimension MIN_SIZE = new Dimension(450, 350);
     static final Dimension MIN_FRAME_SIZE = new Dimension(600, 500);
+    ColorScheme1 c1 = new ColorScheme1();
+    ColorScheme2 c2 = new ColorScheme2();
+    ColorScheme3 c3 = new ColorScheme3();
+    ColorScheme4 c4 = new ColorScheme4();
+    ColorScheme5 c5 = new ColorScheme5();
+    Colorizer[] colorScheme = new Colorizer[]{c1,c2, c3, c4, c5};;
+    Colorizer colorizer = c1;
+    Mandelbrot m1 = new Mandelbrot();
+    Mandelbrot3 m3 = new Mandelbrot3();
+    Mandelbrot4 m4 = new Mandelbrot4();
+    Mandelbrot9 m9 = new Mandelbrot9();
+    Fractal[] fractals = new Fractal[]{m1,m3,m4,m9};
+    Fractal mandelbrot =  m1;
+    FractalPainter fp;
+    CartesianScreenPlane plane;
 
     public MainWindow(){
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -28,10 +46,18 @@ public class MainWindow extends JFrame {
         mainPanel = new GraphicsPanel();
 
         mainPanel.setBackground(Color.WHITE);
+        JMenuBar menuBar = new JMenuBar();
+        MainMenu menu = new MainMenu(menuBar);
+        setJMenuBar(menuBar);
+
+        JToolBar toolBar = new JToolBar();
+        ToolBar tb = new ToolBar(toolBar);
 
         GroupLayout gl = new GroupLayout(getContentPane());
         setLayout(gl);
         gl.setVerticalGroup(gl.createSequentialGroup()
+                .addGap(4)
+                .addComponent(toolBar,(int)(MIN_SIZE.height*0.1), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
                 .addGap(4)
                 .addComponent(mainPanel, (int)(MIN_SIZE.height*0.8), MIN_SIZE.height, GroupLayout.DEFAULT_SIZE)
                 .addGap(4)
@@ -39,6 +65,7 @@ public class MainWindow extends JFrame {
         gl.setHorizontalGroup(gl.createSequentialGroup()
                 .addGap(4)
                 .addGroup(gl.createParallelGroup()
+                        .addComponent(toolBar, (int)(MIN_SIZE.height*0.1),GroupLayout.PREFERRED_SIZE,GroupLayout.PREFERRED_SIZE)
                         .addComponent(mainPanel, MIN_SIZE.width, MIN_SIZE.width, GroupLayout.DEFAULT_SIZE)
                 )
                 .addGap(4)
@@ -50,10 +77,9 @@ public class MainWindow extends JFrame {
                 -2, 1, -1, 1
         );
 
-        var m = new Mandelbrot();
-        var c = new ColorScheme2();
-        var fp = new FractalPainter(plane, m);
-        fp.col = c;
+        //var m = new Mandelbrot();
+        fp = new FractalPainter(plane, mandelbrot);
+        fp.col = colorizer;
         fp.addFinishedListener(new FinishedListener() {
             @Override
             public void finished() {
@@ -101,6 +127,25 @@ public class MainWindow extends JFrame {
             public void mouseDragged(MouseEvent e) {
                 super.mouseDragged(e);
                 sp.setCurrentPoint(e.getPoint());
+            }
+        });
+        tb.addCChooseListener(new ColorChooseListener() {
+            @Override
+            public void chooseColor(int i) {
+                colorizer = colorScheme[i];
+                fp.col = colorizer;
+                mainPanel.repaint();
+            }
+        });
+
+        tb.addMChooseListener(new MandelbrotChooseListener() {
+            @Override
+            public void chooseFractal(int i) {
+                mandelbrot = fractals[i];
+                fp = new FractalPainter(plane,mandelbrot);
+                fp.col = colorizer;
+                mainPanel.addPainter(fp);
+                mainPanel.repaint();
             }
         });
     }
