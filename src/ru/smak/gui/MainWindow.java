@@ -2,6 +2,7 @@ package ru.smak.gui;
 
 import ru.smak.gui.graphics.FinishedListener;
 import ru.smak.gui.graphics.FractalPainter;
+import ru.smak.gui.graphics.JuliaFrame;
 import ru.smak.gui.graphics.SelectionPainter;
 import ru.smak.gui.graphics.components.GraphicsPanel;
 import ru.smak.gui.graphics.coordinates.CartesianScreenPlane;
@@ -81,6 +82,8 @@ public class MainWindow extends JFrame {
                 mainPanel.getHeight(),
                 -2, 1, -1, 1
         );
+        mandelbrot.setPlane(plane);
+
         fp = new FractalPainter(plane, mandelbrot);
         fp.col = colorizer;
 
@@ -109,6 +112,20 @@ public class MainWindow extends JFrame {
                 mainPanel.repaint();
             }
         });
+
+        mainPanel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                if(e != null && e.getButton() == MouseEvent.BUTTON1){
+                    var jF = new JuliaFrame();
+                    jF.setJuliaColorizer(colorizer);
+                    jF.setJuliaParams(e.getX(), e.getY(), plane);
+                    jF.setVisible(true);
+                }
+            }
+        });
+
         mainPanel.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -201,6 +218,13 @@ public class MainWindow extends JFrame {
             @Override
             public void openMedia() {
                 mediaFrame.setVisible(true);
+            }
+        });
+        tb.addDynamicListener(new DynamicListener() {
+            @Override
+            public void setDynamic(boolean state) {
+                mandelbrot.setDynamic(state);
+                mainPanel.repaint();
             }
         });
 

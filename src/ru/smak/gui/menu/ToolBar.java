@@ -20,6 +20,7 @@ public class ToolBar extends JToolBar {
     private final ArrayList<MandelbrotChooseListener> mc = new ArrayList<>();
     private final ArrayList<RepaintListener> gpl = new ArrayList<>();
     private final ArrayList<OpenMediaListener>oml = new ArrayList<>();
+    private final ArrayList<DynamicListener>dl = new ArrayList<>();
     private CartesianScreenPlane plane;
 
     public void setPlane(CartesianScreenPlane plane){
@@ -81,7 +82,7 @@ public class ToolBar extends JToolBar {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //использовать динамическую детализацию
-                var state = dynamicDet.isSelected();
+                notifyDynamicListener(dynamicDet.isSelected());
             }
         });
 
@@ -141,6 +142,16 @@ public class ToolBar extends JToolBar {
     public void notifyOpenMedia(){
         for(var l : oml)
             l.openMedia();
+    }
+    public void addDynamicListener(DynamicListener l){
+        dl.add(l);
+    }
+    public void removeDynamicListener(DynamicListener l){
+        dl.remove(l);
+    }
+    public void notifyDynamicListener(boolean state){
+        for(var l : dl)
+            l.setDynamic(state);
     }
 
 }

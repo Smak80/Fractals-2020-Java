@@ -39,6 +39,19 @@ public class Complex {
         this(re, 0);
     }
 
+    public void setRe(double re){
+        this.re = re;
+    }
+    public void setIm(double im){
+        this.im = im;
+    }
+    public double getRe(){
+        return re;
+    }
+    public double getIm(){
+        return im;
+    }
+
     /**
      * Метод сложения комплексных чисел
      * @param other второе комплексное число
