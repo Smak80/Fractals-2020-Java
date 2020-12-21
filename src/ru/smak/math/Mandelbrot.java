@@ -7,15 +7,15 @@ public class Mandelbrot implements Fractal{
 
     private int maxIters = 200;
     private double r2 = 4;
-    private boolean isDynamic = true;
+    private boolean isDynamic = false;
     private int index = 0;
     private CartesianScreenPlane plane;
     private double stockXMin,stockXMax,stockYMin,stockYMax;
-    public void setStockParams(double xMin,double xMax,double yMin,double yMmax){
+    public void setStockParams(double xMin,double xMax,double yMin,double yMax){
         stockXMin = xMin;
         stockXMax = xMax;
         stockYMin = yMin;
-        stockYMax = yMmax;
+        stockYMax = yMax;
     }
 
     public void setIndex(int index){

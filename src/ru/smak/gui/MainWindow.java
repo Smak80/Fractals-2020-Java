@@ -146,5 +146,13 @@ public class MainWindow extends JFrame {
                 mainPanel.repaint();
             }
         });
+
+        tb.addDynamicListener(new DynamicListener() {
+            @Override
+            public void setDynamic(boolean state) {
+                mandelbrot.setDynamic(state);
+                mainPanel.repaint();
+            }
+        });
     }
 }

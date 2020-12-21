@@ -17,22 +17,29 @@ public class ToolBar extends JToolBar {
     private JComboBox color;
     private ArrayList<ColorChooseListener> cc = new ArrayList<>();
     private ArrayList<MandelbrotChooseListener> mc = new ArrayList<>();
-
+    private final ArrayList<DynamicListener>dl = new ArrayList<>();
 
     public ToolBar(JToolBar bar){
         toolBar = bar;
+        toolBar.setRollover(true);
         back = new JButton(MainMenu.createIcon("icons/back.png"));
+        back.setFocusable(false);
         toolBar.add(back);
         toolBar.addSeparator();
         dynamicDet = new JCheckBox("Детализация", false);
         dynamicDet.setBorderPaintedFlat(true);
+        dynamicDet.setFocusable(false);
         toolBar.add(dynamicDet);
         toolBar.addSeparator();
         animation = new JButton(MainMenu.createIcon("icons/video.png"));
+        animation.setFocusable(false);
         fractal = new JComboBox(new String[]{"z^2+c","z^3+c", "z^4+c", "z^9+c"});
+        fractal.setFocusable(false);
         toolBar.add(fractal);
         toolBar.addSeparator();
         color = new JComboBox(new String[]{"Разноцветный", "Синий", "Зелёный", "Жёлтый", "Коричневый"});
+        color.setFocusable(false);
+        color.setSelectedItem(color.getItemAt(1));
         toolBar.add(color);
         toolBar.addSeparator();
         toolBar.add(animation);
@@ -64,6 +71,7 @@ public class ToolBar extends JToolBar {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //использовать динамическую детализацию
+                notifyDynamicListener(dynamicDet.isSelected());
             }
         });
 
@@ -100,6 +108,17 @@ public class ToolBar extends JToolBar {
     public void changeView(int i){
         for(var m : mc )
             m.chooseFractal(i);
+    }
+
+    public void addDynamicListener(DynamicListener l){
+        dl.add(l);
+    }
+    public void removeDynamicListener(DynamicListener l){
+        dl.remove(l);
+    }
+    public void notifyDynamicListener(boolean state){
+        for(var l : dl)
+            l.setDynamic(state);
     }
 
 }
