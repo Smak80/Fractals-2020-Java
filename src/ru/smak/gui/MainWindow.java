@@ -6,12 +6,14 @@ import ru.smak.gui.graphics.SelectionPainter;
 import ru.smak.gui.graphics.components.GraphicsPanel;
 import ru.smak.gui.graphics.coordinates.CartesianScreenPlane;
 import ru.smak.gui.graphics.coordinates.Converter;
+
 import ru.smak.gui.graphics.fractalcolors.*;
 import ru.smak.gui.graphics.menu.ColorChooseListener;
 import ru.smak.gui.graphics.menu.MainMenu;
 import ru.smak.gui.graphics.menu.MandelbrotChooseListener;
 import ru.smak.gui.graphics.menu.ToolBar;
-import ru.smak.math.*;
+
+import ru.smak.math.Mandelbrot;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,6 +24,7 @@ public class MainWindow extends JFrame {
 
     static final Dimension MIN_SIZE = new Dimension(450, 350);
     static final Dimension MIN_FRAME_SIZE = new Dimension(600, 500);
+
     ColorScheme1 c1 = new ColorScheme1();
     ColorScheme2 c2 = new ColorScheme2();
     ColorScheme3 c3 = new ColorScheme3();
@@ -29,15 +32,10 @@ public class MainWindow extends JFrame {
     ColorScheme5 c5 = new ColorScheme5();
     Colorizer[] colorScheme = new Colorizer[]{c1,c2, c3, c4, c5};;
     Colorizer colorizer = c1;
-    Mandelbrot m1 = new Mandelbrot();
-    Mandelbrot3 m3 = new Mandelbrot3();
-    Mandelbrot4 m4 = new Mandelbrot4();
-    Mandelbrot9 m9 = new Mandelbrot9();
-    Fractal[] fractals = new Fractal[]{m1,m3,m4,m9};
-    Fractal mandelbrot =  m1;
-    FractalPainter fp;
     CartesianScreenPlane plane;
-
+    Mandelbrot mandelbrot = new Mandelbrot();
+    FractalPainter fp;
+  
     public MainWindow(){
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setMinimumSize(MIN_FRAME_SIZE);
@@ -76,10 +74,12 @@ public class MainWindow extends JFrame {
                 mainPanel.getHeight(),
                 -2, 1, -1, 1
         );
+        mandelbrot.setPlane(plane);
 
-        //var m = new Mandelbrot();
+
         fp = new FractalPainter(plane, mandelbrot);
         fp.col = colorizer;
+        mandelbrot.setStockParams(plane.xMin,plane.xMax,plane.yMin,plane.yMax);
         fp.addFinishedListener(new FinishedListener() {
             @Override
             public void finished() {
