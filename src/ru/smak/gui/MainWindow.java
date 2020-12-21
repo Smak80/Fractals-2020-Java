@@ -21,10 +21,7 @@ public class MainWindow extends JFrame {
     static final Dimension MIN_SIZE = new Dimension(450, 350);
     static final Dimension MIN_FRAME_SIZE = new Dimension(600, 500);
 
-    SaveProportions SaveProp = null;
-
-
-    public MainWindow(){
+    public <ProportionsSaver> MainWindow(){
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setMinimumSize(MIN_FRAME_SIZE);
         setTitle("Фракталы");
@@ -66,23 +63,18 @@ public class MainWindow extends JFrame {
         });
         mainPanel.addPainter(fp);
         var sp = new SelectionPainter(mainPanel.getGraphics());
-        SaveProp = new SaveProportions(
-                plane.xMax,plane.xMin, plane.yMax, plane.yMin,
-                mainPanel.getWidth(), mainPanel.getHeight());
 
+        SaveProportions save = new SaveProportions(plane.xMax, plane.xMin, plane.yMax, plane.yMin, mainPanel.getWidth(), mainPanel.getHeight());
 
         mainPanel.addComponentListener(new ComponentAdapter() {
-
             @Override
             public void componentResized(ComponentEvent e) {
 
-                SaveProp.Go(mainPanel.getWidth(), mainPanel.getHeight(), plane);
+                save.Go(mainPanel.getWidth(), mainPanel.getHeight(), plane);
 
                 plane.setWidth(mainPanel.getWidth());
                 plane.setHeight(mainPanel.getHeight());
                 sp.setGraphics(mainPanel.getGraphics());
-                mainPanel.repaint();
-
             }
         });
         mainPanel.addMouseListener(new MouseAdapter() {
@@ -98,11 +90,7 @@ public class MainWindow extends JFrame {
                 super.mouseReleased(e);
                 sp.setVisible(false);
                 var r = sp.getSelectionRect();
-
-
-                SaveProp.newScal(r,mainPanel.getWidth(),mainPanel.getHeight(),plane);
-
-
+                save.newScal(r,mainPanel.getWidth(), mainPanel.getHeight(), plane);
                 mainPanel.repaint();
             }
         });
