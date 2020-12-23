@@ -36,6 +36,7 @@ public class Transforms{
     }
 
     public static CartesianScreenPlane toHome(){
+        areas.clear();
         return base;
     }
 }
