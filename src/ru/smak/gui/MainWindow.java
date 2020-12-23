@@ -124,18 +124,6 @@ public class MainWindow extends JFrame {
             }
         });
 
-        mainPanel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                super.mouseClicked(e);
-                var dx = Converter.xScr2Crt(e.getX(), plane);
-                var dy = Converter.yScr2Crt(e.getY(), plane);
-                mandelbrot.setJuliaParams(dx, dy);
-                mandelbrot.setJulia();
-                mainPanel.repaint();
-            }
-        });
-
         mainPanel.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
