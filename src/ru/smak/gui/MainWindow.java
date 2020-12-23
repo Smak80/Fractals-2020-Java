@@ -8,7 +8,6 @@ import ru.smak.gui.graphics.coordinates.CartesianScreenPlane;
 import ru.smak.gui.graphics.coordinates.Converter;
 import ru.smak.gui.graphics.fractalcolors.*;
 import ru.smak.gui.graphics.menu.*;
-import ru.smak.math.Mandelbrot;
 import ru.smak.SaveProportions;
 
 import javax.swing.*;
