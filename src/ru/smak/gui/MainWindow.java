@@ -5,6 +5,7 @@ import ru.smak.gui.graphics.FractalPainter;
 import ru.smak.gui.graphics.SelectionPainter;
 import ru.smak.gui.graphics.components.GraphicsPanel;
 import ru.smak.gui.graphics.coordinates.CartesianScreenPlane;
+import ru.smak.gui.graphics.coordinates.Converter;
 import ru.smak.gui.graphics.fractalcolors.*;
 import ru.smak.gui.graphics.menu.*;
 import ru.smak.math.Mandelbrot;
@@ -76,6 +77,8 @@ public class MainWindow extends JFrame {
 
         ImageSaver iSaver = new ImageSaver(plane, mandelbrot, colorizer);
 
+        menu.setImageSaver(iSaver);
+
         fp.addFinishedListener(new FinishedListener() {
             @Override
             public void finished() {
@@ -98,6 +101,7 @@ public class MainWindow extends JFrame {
                 plane.setWidth(mainPanel.getWidth());
                 plane.setHeight(mainPanel.getHeight());
                 sp.setGraphics(mainPanel.getGraphics());
+                mainPanel.repaint();
             }
         });
         mainPanel.addMouseListener(new MouseAdapter() {
@@ -117,6 +121,18 @@ public class MainWindow extends JFrame {
                     save.newScal(r,mainPanel.getWidth(), mainPanel.getHeight(), plane);
                     mainPanel.repaint();
                 }
+            }
+        });
+
+        mainPanel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                var dx = Converter.xScr2Crt(e.getX(), plane);
+                var dy = Converter.yScr2Crt(e.getY(), plane);
+                mandelbrot.setJuliaParams(dx, dy);
+                mandelbrot.setJulia();
+                mainPanel.repaint();
             }
         });
 

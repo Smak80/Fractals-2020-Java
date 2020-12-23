@@ -10,12 +10,24 @@ public class Mandelbrot implements Fractal{
     private boolean isDynamic = false;
     private int index = 0;
     private CartesianScreenPlane plane;
+
+    private boolean isJulia = false;
+    private Complex juliaParams;
+
+    public void setJuliaParams(double x, double y){
+        juliaParams = new Complex(x, y);
+    }
+
     private double stockXMin,stockXMax,stockYMin,stockYMax;
     public void setStockParams(double xMin,double xMax,double yMin,double yMax){
         stockXMin = xMin;
         stockXMax = xMax;
         stockYMin = yMin;
         stockYMax = yMax;
+    }
+
+    public void setJulia(){
+        isJulia = !isJulia;
     }
 
     public void setIndex(int index){
@@ -40,9 +52,10 @@ public class Mandelbrot implements Fractal{
 
     @Override
     public double isInSet(Complex c) {
-        final var z = new Complex();
-        var t = new Complex();
         var d= (isDynamic) ? DynamicIterations.getIters(plane,stockXMin,stockXMax,stockYMin,stockYMax) : maxIters;
+        if(!isJulia){
+            final var z = new Complex();
+            var t = new Complex();
             for (int i = 0; i < d; i++) {
                 if(index == 0){
                     z.timesAssign(z);
@@ -70,5 +83,16 @@ public class Mandelbrot implements Fractal{
             return 1.0F;
 
         }
+        else{
+            var z = juliaParams;
+            for(int i = 0; i < d; i++){
+                c.timesAssign(c);
+                c.plusAssign(z);
+                if (c.abs2() > r2)
+                    return i - Math.log(Math.log(c.abs()) / Math.log(d)) / Math.log(2.0);
+            }
+            return 1.0F;
+        }
+    }
 
 }

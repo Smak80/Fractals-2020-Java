@@ -6,6 +6,9 @@ import java.awt.event.ActionListener;
 import java.net.URL;
 
 public class MainMenu extends JFrame {
+
+    private ImageSaver saver;
+
     private JMenuBar menuBar;
     public MainMenu(JMenuBar m){
         menuBar = m;
@@ -13,6 +16,9 @@ public class MainMenu extends JFrame {
         menuBar.add(createOpenMenu());
     }
 
+    public void setImageSaver( ImageSaver saver){
+        this.saver = saver;
+    }
     public JMenu createSaveMenu(){
         JMenu save = new JMenu("Сохранить");
         JMenuItem asImage = new JMenuItem("Как изображение...");
@@ -24,6 +30,7 @@ public class MainMenu extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //открыть диалоговое окно для сохранения картинки
+                saver.saveImage();
             }
         });
         inInternalFormat.addActionListener(new ActionListener() {

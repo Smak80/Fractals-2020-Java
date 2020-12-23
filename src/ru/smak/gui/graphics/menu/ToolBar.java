@@ -19,6 +19,7 @@ public class ToolBar extends JToolBar {
     private ArrayList<MandelbrotChooseListener> mc = new ArrayList<>();
     private final ArrayList<DynamicListener>dl = new ArrayList<>();
 
+
     public ToolBar(JToolBar bar){
         toolBar = bar;
         toolBar.setRollover(true);
