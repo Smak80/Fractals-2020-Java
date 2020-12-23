@@ -8,7 +8,6 @@ import ru.smak.gui.graphics.coordinates.CartesianScreenPlane;
 import ru.smak.gui.graphics.coordinates.Converter;
 import ru.smak.gui.graphics.fractalcolors.*;
 import ru.smak.gui.graphics.menu.*;
-import ru.smak.gui.graphics.proportions.Transforms;
 import ru.smak.math.Mandelbrot;
 import ru.smak.SaveProportions;
 
@@ -18,6 +17,7 @@ import java.awt.event.*;
 
 public class MainWindow extends JFrame {
     GraphicsPanel mainPanel;
+    MediaFrame mediaFrame;
 
     static final Dimension MIN_SIZE = new Dimension(450, 350);
     static final Dimension MIN_FRAME_SIZE = new Dimension(600, 500);
@@ -183,7 +183,14 @@ public class MainWindow extends JFrame {
                 mainPanel.repaint();
             }
         });
+        mediaFrame = new MediaFrame();
 
+        tb.addOpenMediaListener(new OpenMediaListener() {
+            @Override
+            public void openMedia() {
+                mediaFrame.setVisible(true);
+            }
+        });
         tb.addMChooseListener(new MandelbrotChooseListener() {
             @Override
             public void chooseFractal(int i) {
@@ -198,6 +205,14 @@ public class MainWindow extends JFrame {
             public void setDynamic(boolean state) {
                 mandelbrot.setDynamic(state);
                 mainPanel.repaint();
+            }
+        });
+        mediaFrame.getVideoPanel().addCatchListener(new CatchListener() {
+            @Override
+            public void timeToCatch(MediaProcessor mediaProcessor) {
+                mediaFrame.getVideoPanel().setData(mandelbrot, colorizer);
+                mediaProcessor.catchImage(plane);
+                mediaProcessor.setVideoScreen(MIN_FRAME_SIZE);
             }
         });
     }
