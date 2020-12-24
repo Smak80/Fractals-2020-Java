@@ -54,12 +54,7 @@ public class SaveProportions {
         }
     }
 
-     public void newScal(Rectangle r, int PanelWidh,int PanelHaight, CartesianScreenPlane pplane){
-         var xMin = Converter.xScr2Crt(r.x,pplane);
-         var xMax = Converter.xScr2Crt(r.x+r.width,pplane);
-
-         var yMin = Converter.yScr2Crt(r.y+r.height,pplane);
-         var yMax = Converter.yScr2Crt(r.y,pplane);
+     public void newScal(double xMin, double xMax, double yMin, double yMax, int PanelWidh,int PanelHaight, CartesianScreenPlane pplane){
 
          var pWidh =  xMax - xMin;
          var pHaight = yMax - yMin;
