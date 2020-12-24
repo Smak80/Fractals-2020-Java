@@ -1,10 +1,11 @@
 package ru.smak.gui.graphics.menu;
 
+import ru.smak.gui.DynamicIterations;
+import ru.smak.gui.graphics.coordinates.CartesianScreenPlane;
+import ru.smak.gui.graphics.proportions.Transforms;
+
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.TimerTask;
 
@@ -15,10 +16,16 @@ public class ToolBar extends JToolBar {
     private JButton animation;
     private JComboBox fractal;
     private JComboBox color;
-    private ArrayList<ColorChooseListener> cc = new ArrayList<>();
-    private ArrayList<MandelbrotChooseListener> mc = new ArrayList<>();
+    private final ArrayList<ColorChooseListener> cc = new ArrayList<>();
+    private final ArrayList<MandelbrotChooseListener> mc = new ArrayList<>();
+   // private final ArrayList<RepaintListener> gpl = new ArrayList<>();
+    private final ArrayList<OpenMediaListener>oml = new ArrayList<>();
     private final ArrayList<DynamicListener>dl = new ArrayList<>();
+    private CartesianScreenPlane plane;
 
+    public void setPlane(CartesianScreenPlane plane){
+        this.plane = plane;
+    }
 
     public ToolBar(JToolBar bar){
         toolBar = bar;
@@ -57,13 +64,16 @@ public class ToolBar extends JToolBar {
                         @Override
                         public void run() {
                             if (clickCnt == 1) {
-                                //вернуть на шаг раньше
+                                //вернуться на шаг раньше
+                                //Transforms.executeLast(plane);
                             } else if (clickCnt > 1) {
                                 //вернуться к исходному фракталу
+                                //Transforms.toHome(plane);
                             }
+                            //notifyRepaintListeners();
                             clickCnt = 0;
                         }
-                    }, 300);
+                        }, 300);
                 }
             }
         });
@@ -92,6 +102,7 @@ public class ToolBar extends JToolBar {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //создать видео
+                notifyOpenMedia();
             }
         });
     }
@@ -110,7 +121,28 @@ public class ToolBar extends JToolBar {
         for(var m : mc )
             m.chooseFractal(i);
     }
-
+/*
+    public void addGetPlaneListener(RepaintListener l){
+        gpl.add(l);
+    }
+    public void removeGetPlaneListener(RepaintListener l){
+        gpl.remove(l);
+    }
+    public void notifyRepaintListeners(){
+        for(var l : gpl)
+            l.timeToRepaint();
+    }
+*/
+    public void addOpenMediaListener(OpenMediaListener l){
+        oml.add(l);
+    }
+    public void removeOpenMediaListener(OpenMediaListener l){
+        oml.remove(l);
+    }
+    public void notifyOpenMedia(){
+        for(var l : oml)
+            l.openMedia();
+    }
     public void addDynamicListener(DynamicListener l){
         dl.add(l);
     }

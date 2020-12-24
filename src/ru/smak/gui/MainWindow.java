@@ -8,7 +8,9 @@ import ru.smak.gui.graphics.coordinates.CartesianScreenPlane;
 import ru.smak.gui.graphics.coordinates.Converter;
 import ru.smak.gui.graphics.fractalcolors.*;
 import ru.smak.gui.graphics.menu.*;
-import ru.smak.gui.graphics.proportions.Transforms;
+import ru.smak.gui.video.MediaFrame;
+import ru.smak.gui.video.processor.MediaProcessor;
+import ru.smak.gui.video.videopanel.CatchListener;
 import ru.smak.math.Mandelbrot;
 import ru.smak.SaveProportions;
 
@@ -18,6 +20,7 @@ import java.awt.event.*;
 
 public class MainWindow extends JFrame {
     GraphicsPanel mainPanel;
+    MediaFrame mediaFrame;
 
     static final Dimension MIN_SIZE = new Dimension(450, 350);
     static final Dimension MIN_FRAME_SIZE = new Dimension(600, 500);
@@ -78,8 +81,6 @@ public class MainWindow extends JFrame {
 
         ImageSaver iSaver = new ImageSaver(plane, mandelbrot, colorizer);
 
-        Transforms.compose(plane, mainPanel.getWidth(), mainPanel.getHeight());
-
         menu.setImageSaver(iSaver);
 
         fp.addFinishedListener(new FinishedListener() {
@@ -121,36 +122,8 @@ public class MainWindow extends JFrame {
                 sp.setVisible(false);
                 var r = sp.getSelectionRect();
                 if (r != null){
-                    var xMin = Converter.xScr2Crt(r.x,plane);
-                    var xMax = Converter.xScr2Crt(r.x+r.width,plane);
-
-                    var yMin = Converter.yScr2Crt(r.y+r.height,plane);
-                    var yMax = Converter.yScr2Crt(r.y,plane);
-
-                    Transforms.addArea(plane);
-
-                    save.newScal(xMin, xMax, yMin, yMax, mainPanel.getWidth(), mainPanel.getHeight(), plane);
+                    save.newScal(r,mainPanel.getWidth(), mainPanel.getHeight(), plane);
                     mainPanel.repaint();
-                }
-            }
-        });
-
-        addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_Z){
-                    var p = Transforms.executeLast();
-                    if(p != null){
-                        save.newScal(p.xMin, p.xMax, p.yMin, p.yMax, mainPanel.getWidth(), mainPanel.getHeight(), plane);
-                        mainPanel.repaint();
-                    }
-                }
-                else if(e.getKeyCode() == KeyEvent.VK_H){
-                    var p = Transforms.toHome();
-                    if(p != null){
-                        save.newScal(p.xMin, p.xMax, p.yMin, p.yMax, mainPanel.getWidth(), mainPanel.getHeight(), plane);
-                        mainPanel.repaint();
-                    }
                 }
             }
         });
@@ -183,7 +156,14 @@ public class MainWindow extends JFrame {
                 mainPanel.repaint();
             }
         });
+        mediaFrame = new MediaFrame();
 
+        tb.addOpenMediaListener(new OpenMediaListener() {
+            @Override
+            public void openMedia() {
+                mediaFrame.setVisible(true);
+            }
+        });
         tb.addMChooseListener(new MandelbrotChooseListener() {
             @Override
             public void chooseFractal(int i) {
@@ -198,6 +178,14 @@ public class MainWindow extends JFrame {
             public void setDynamic(boolean state) {
                 mandelbrot.setDynamic(state);
                 mainPanel.repaint();
+            }
+        });
+        mediaFrame.getVideoPanel().addCatchListener(new CatchListener() {
+            @Override
+            public void timeToCatch(MediaProcessor mediaProcessor) {
+                mediaFrame.getVideoPanel().setData(mandelbrot, colorizer);
+                mediaProcessor.catchImage(plane);
+                mediaProcessor.setVideoScreen(MIN_FRAME_SIZE);
             }
         });
     }
