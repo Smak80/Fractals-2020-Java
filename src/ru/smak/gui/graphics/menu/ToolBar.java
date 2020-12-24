@@ -18,7 +18,7 @@ public class ToolBar extends JToolBar {
     private JComboBox color;
     private final ArrayList<ColorChooseListener> cc = new ArrayList<>();
     private final ArrayList<MandelbrotChooseListener> mc = new ArrayList<>();
-   // private final ArrayList<RepaintListener> gpl = new ArrayList<>();
+    private final ArrayList<ExecuteListener> exl = new ArrayList<>();
     private final ArrayList<OpenMediaListener>oml = new ArrayList<>();
     private final ArrayList<DynamicListener>dl = new ArrayList<>();
     private CartesianScreenPlane plane;
@@ -53,6 +53,7 @@ public class ToolBar extends JToolBar {
         toolBar.add(animation);
         toolBar.setFloatable(false);
 
+
         back.addMouseListener(new MouseAdapter() {
             private int clickCnt = 0;
             java.util.Timer timer = new java.util.Timer("doubleClickTimer", false);
@@ -65,10 +66,12 @@ public class ToolBar extends JToolBar {
                         public void run() {
                             if (clickCnt == 1) {
                                 //вернуться на шаг раньше
-                                //Transforms.executeLast(plane);
+                                var p = Transforms.executeLast();
+                                notifyExecuteListeners(p);
                             } else if (clickCnt > 1) {
                                 //вернуться к исходному фракталу
-                                //Transforms.toHome(plane);
+                                var p = Transforms.toHome();
+                                notifyExecuteListeners(p);
                             }
                             //notifyRepaintListeners();
                             clickCnt = 0;
@@ -121,18 +124,16 @@ public class ToolBar extends JToolBar {
         for(var m : mc )
             m.chooseFractal(i);
     }
-/*
-    public void addGetPlaneListener(RepaintListener l){
-        gpl.add(l);
+    public void addExectueListener(ExecuteListener l){
+        exl.add(l);
     }
-    public void removeGetPlaneListener(RepaintListener l){
-        gpl.remove(l);
+    public void removeExecuteListener(ExecuteListener l){
+        exl.remove(l);
     }
-    public void notifyRepaintListeners(){
-        for(var l : gpl)
-            l.timeToRepaint();
+    private void notifyExecuteListeners(CartesianScreenPlane plane){
+        for(var l : exl)
+            l.executePlane(plane);
     }
-*/
     public void addOpenMediaListener(OpenMediaListener l){
         oml.add(l);
     }

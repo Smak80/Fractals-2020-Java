@@ -129,6 +129,17 @@ public class MainWindow extends JFrame {
                 mainPanel.repaint();
             }
         });
+
+        tb.addExectueListener(new ExecuteListener() {
+            @Override
+            public void executePlane(CartesianScreenPlane p) {
+                if(plane != null){
+                    save.newScal(p.xMin, p.xMax, p.yMin, p.yMax, mainPanel.getWidth(), mainPanel.getHeight(), plane);
+                    mainPanel.repaint();
+                }
+            }
+        });
+
         mainPanel.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
