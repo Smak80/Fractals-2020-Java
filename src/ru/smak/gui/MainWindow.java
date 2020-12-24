@@ -81,6 +81,7 @@ public class MainWindow extends JFrame {
         fp.col = colorizer;
 
         ImageSaver iSaver = new ImageSaver(plane, mandelbrot, colorizer);
+        Transforms.compose(plane, mainPanel.getWidth(), mainPanel.getHeight());
 
         menu.setImageSaver(iSaver);
 
@@ -104,16 +105,15 @@ public class MainWindow extends JFrame {
                     var p = Transforms.executeLast();
                     if(p != null){
                         save.newScal(p.xMin, p.xMax, p.yMin, p.yMax, mainPanel.getWidth(), mainPanel.getHeight(), plane);
-                        mainPanel.repaint();
                     }
                 }
                 else if(e.getKeyCode() == KeyEvent.VK_H){
                     var p = Transforms.toHome();
                     if(p != null){
                         save.newScal(p.xMin, p.xMax, p.yMin, p.yMax, mainPanel.getWidth(), mainPanel.getHeight(), plane);
-                        mainPanel.repaint();
                     }
                 }
+                mainPanel.repaint();
             }
         });
 
@@ -149,6 +149,8 @@ public class MainWindow extends JFrame {
                     var yMin = Converter.yScr2Crt(r.y+r.height,plane);
                     var yMax = Converter.yScr2Crt(r.y,plane);
 
+                    Transforms.addArea(plane);
+
                     save.newScal(xMin, xMax, yMin, yMax,mainPanel.getWidth(), mainPanel.getHeight(), plane);
                     mainPanel.repaint();
                 }
@@ -158,11 +160,25 @@ public class MainWindow extends JFrame {
         mainPanel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                var dx = Converter.xScr2Crt(e.getX(), plane);
-                var dy = Converter.yScr2Crt(e.getY(), plane);
-                mandelbrot.setJuliaParams(dx, dy);
-                mandelbrot.setJulia();
-                mainPanel.repaint();
+                if(mediaFrame.isVisible()){
+                    if(mandelbrot.isJulia())
+                        mandelbrot.setJulia();
+                }
+                else if(!mediaFrame.isVisible()){
+                    var dx = Converter.xScr2Crt(e.getX(), plane);
+                    var dy = Converter.yScr2Crt(e.getY(), plane);
+                    mandelbrot.setJuliaParams(dx, dy);
+                    mandelbrot.setJulia();
+                    if(mandelbrot.isJulia()){
+                        toolBar.setVisible(false);
+                        menuBar.setVisible(false);
+                    }
+                    else{
+                        toolBar.setVisible(true);
+                        menuBar.setVisible(true);
+                    }
+                    mainPanel.repaint();
+                }
             }
         });
 

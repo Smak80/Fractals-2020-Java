@@ -47,7 +47,7 @@ public class VideoPanel extends JPanel {
         fileChooser = new JFileChooser();
         fileChooser.setFileFilter(new FileNameExtensionFilter("Video(*.mp4)", "mp4"));
         fileChooser.setAcceptAllFileFilterUsed(false);
-        fileChooser.setSelectedFile(new File("myVideo.mp4"));
+        fileChooser.setSelectedFile(new File(fileChooser.getCurrentDirectory().getPath()+"\\MyVideo.mp4"));
         fileChooser.setMultiSelectionEnabled(false);
 
         GroupLayout groupLayout = new GroupLayout(this);

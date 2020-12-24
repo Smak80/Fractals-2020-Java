@@ -30,6 +30,10 @@ public class Mandelbrot implements Fractal{
         isJulia = !isJulia;
     }
 
+    public boolean isJulia(){
+        return isJulia;
+    }
+
     public void setIndex(int index){
         this.index = index;
     }
